@@ -99,4 +99,4 @@
     - 멘토가 개설한 스터디 그룹인 경우 Q&A 대한 답변을 제공한다.
 
 # **Trouble Shooting**
-![go to the trouble shooting section](doc/img/TroubleShooting.md)
+![go to the trouble shooting section](doc/TroubleShooting.md)
