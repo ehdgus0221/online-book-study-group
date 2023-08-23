@@ -38,7 +38,7 @@
 
 ---
 
-![ERD](doc/img/erd.png)
+![ERD](doc/img/ERD_Modeling.png)
 
 # 구현 예정 기능
 
