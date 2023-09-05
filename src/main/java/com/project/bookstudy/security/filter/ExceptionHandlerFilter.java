@@ -1,6 +1,7 @@
 package com.project.bookstudy.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.bookstudy.common.dto.ErrorCode;
 import com.project.bookstudy.common.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_TOKEN;
+import static com.project.bookstudy.common.dto.ErrorCode.INVALID_TOKEN;
 
 
 //Filter 에서 올라오는 예외 처리 담당,
@@ -27,7 +28,6 @@ import static org.springframework.security.oauth2.core.OAuth2ErrorCodes.INVALID_
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
     private final ObjectMapper objectMapper;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -42,7 +42,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(String.valueOf(HttpStatus.UNAUTHORIZED.value()))
-                .message(INVALID_TOKEN)
+                .message(INVALID_TOKEN.getDescription())
                 .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

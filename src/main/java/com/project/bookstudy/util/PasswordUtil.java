@@ -1,7 +1,10 @@
 package com.project.bookstudy.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Random;
 
+@Slf4j
 public class PasswordUtil {
 
     public static String generateRandomPassword() {
@@ -23,7 +26,7 @@ public class PasswordUtil {
 
             password.append(charSet[index]);
         }
-        System.out.println(password);
+        log.info(String.valueOf(password));
         return password.toString();
         //StringBuffer를 String으로 변환해서 return 하려면 toString()을 사용하면 된다.
     }

@@ -4,6 +4,7 @@ import com.project.bookstudy.util.PasswordUtil;
 import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.member.repository.MemberRepository;
 import com.project.bookstudy.security.service.JwtTokenProvider;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -22,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static com.project.bookstudy.common.dto.ErrorCode.GET_WRITER_ERROR;
 import static com.project.bookstudy.common.dto.ErrorCode.NOT_FOUND_TOKEN;
 
 /**
@@ -67,20 +67,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      */
     public void checkRefreshTokenAndReIssueAccessAndRefreshToken(HttpServletResponse response, String refreshToken) {
             Member member = memberRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> {
-                        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
-                        try {
-                            response.getWriter().write(String.valueOf(NOT_FOUND_TOKEN)); // 에러 메시지를 응답 본문에 포함
-                            response.getWriter().flush();
-                            response.getWriter().close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(String.valueOf(GET_WRITER_ERROR));
-                        }
-                        return new RuntimeException(String.valueOf(NOT_FOUND_TOKEN));
-                    });
+                    .orElseThrow(() -> new JwtException(NOT_FOUND_TOKEN.getDescription()));
 
         String reIssuedRefreshToken = reIssueRefreshToken(member);
         jwtTokenProvider.sendAccessAndRefreshToken(response, jwtTokenProvider.createAccessToken(member.getId()),
@@ -107,13 +94,13 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .filter(jwtTokenProvider::isTokenValid)
                 .ifPresent(accessToken -> jwtTokenProvider.extractId(accessToken)
                         .ifPresent(id -> memberRepository.findById(id)
-                                .ifPresent(this::saveAuthentication)));
+                                .ifPresent(this::setAuthentication)));
     }
 
     /**
      * [인증 허가]
      */
-    public void saveAuthentication(Member member) {
+    public void setAuthentication(Member member) {
         String password = member.getPassword();
         if (password == null) { // 소셜 로그인 유저의 비밀번호 임의로 설정 하여 인증 되도록 설정
             password = PasswordUtil.generateRandomPassword();
