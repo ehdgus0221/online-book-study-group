@@ -1,4 +1,4 @@
-package com.project.bookstudy.studygroup.domain;
+package com.project.bookstudy.studygroup.domain.param;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,19 +6,20 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
-public class UpdateStudyGroupParam {
+public class CreateStudyGroupParam {
+
     private String subject;
-    private int price;
     private String contents;
     private String contentsDetail;
     private int maxSize;
+    private int price;
     private LocalDateTime studyStartDt;
     private LocalDateTime studyEndDt;
     private LocalDateTime recruitmentStartDt;
     private LocalDateTime recruitmentEndDt;
 
     @Builder
-    private UpdateStudyGroupParam(String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt) {
+    public CreateStudyGroupParam(String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt) {
         this.subject = subject;
         this.contents = contents;
         this.contentsDetail = contentsDetail;

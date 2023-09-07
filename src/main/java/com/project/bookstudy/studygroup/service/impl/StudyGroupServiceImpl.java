@@ -2,57 +2,48 @@ package com.project.bookstudy.studygroup.service.impl;
 
 import com.project.bookstudy.common.dto.ErrorCode;
 import com.project.bookstudy.member.domain.Member;
-import com.project.bookstudy.member.exception.MemberNotFoundException;
 import com.project.bookstudy.member.repository.MemberRepository;
 import com.project.bookstudy.studygroup.domain.StudyGroup;
-import com.project.bookstudy.studygroup.domain.UpdateStudyGroupParam;
-import com.project.bookstudy.studygroup.dto.CreateStudyGroup;
+import com.project.bookstudy.studygroup.domain.param.CreateStudyGroupParam;
+import com.project.bookstudy.studygroup.domain.param.UpdateStudyGroupParam;
 import com.project.bookstudy.studygroup.dto.StudyGroupDto;
-import com.project.bookstudy.studygroup.dto.UpdateStudyGroupRequest;
-import com.project.bookstudy.studygroup.exception.StudyGroupNotFoundException;
+import com.project.bookstudy.studygroup.dto.request.StudyGroupSearchCond;
+import com.project.bookstudy.studygroup.repository.EnrollmentRepository;
 import com.project.bookstudy.studygroup.repository.StudyGroupRepository;
 import com.project.bookstudy.studygroup.service.StudyGroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class StudyGroupServiceImpl implements StudyGroupService {
 
     private final StudyGroupRepository studyGroupRepository;
     private final MemberRepository memberRepository;
+    private final EnrollmentRepository enrollmentRepository;
+
 
     @Override
-    public StudyGroupDto createStudyGroup(CreateStudyGroup.Request request) {
+    @Transactional
+    public StudyGroupDto createStudyGroup(Long memberId, CreateStudyGroupParam studyGroupParam) {
 
-        Member member = memberRepository.findById(request.getMemberId())
-                .orElseThrow(() -> new MemberNotFoundException());
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getDescription()));
 
-        StudyGroup studyGroup = StudyGroup.builder()
-                .subject(request.getSubject())
-                .contents(request.getContents())
-                .contentsDetail(request.getContentsDetail())
-                .studyStartDt(request.getStudyStartDt())
-                .studyEndDt(request.getStudyEndDt())
-                .maxSize(request.getMaxSize())
-                .price(request.getPrice())
-                .recruitmentStartDt(request.getRecruitmentStartDt())
-                .recruitmentEndDt(request.getRecruitmentEndDt())
-                .leader(member)
-                .build();
+        StudyGroup savedStudyGroup = studyGroupRepository.save(StudyGroup.from(member, studyGroupParam));
 
-        StudyGroup saveStudyGroup = studyGroupRepository.save(studyGroup);
-
-        return StudyGroupDto.fromEntity(saveStudyGroup, member);
+        return StudyGroupDto.fromEntity(savedStudyGroup, member);
     }
 
     @Override
-    public void updateStudyGroup(long id, UpdateStudyGroupParam updateParam) {
-        StudyGroup studyGroup = studyGroupRepository.findById(id)
+    @Transactional
+    public void updateStudyGroup(UpdateStudyGroupParam updateParam) {
+
+        StudyGroup studyGroup = studyGroupRepository.findById(updateParam.getId())
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.STUDY_GROUP_NOT_FOUND.getDescription()));
 
         studyGroup.update(updateParam);
@@ -60,15 +51,19 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
 
     @Override
-    public Page<StudyGroupDto> getStudyGroupList(Pageable pageable) {
-        Page<StudyGroup> studyGroups = studyGroupRepository.searchStudyGroup(pageable);
+    public Page<StudyGroupDto> getStudyGroupList(Pageable pageable, StudyGroupSearchCond cond) {
+
+        Page<StudyGroup> studyGroups = studyGroupRepository.searchStudyGroup(pageable, cond);
+
         return studyGroups.map(entity -> StudyGroupDto.fromEntity(entity, entity.getLeader()));
     }
 
     @Override
     public StudyGroupDto getStudyGroup(Long studyGroupId) {
 
-        StudyGroup studyGroup = studyGroupRepository.findByIdWithLeader(studyGroupId);
+        StudyGroup studyGroup = studyGroupRepository.findByIdWithLeader(studyGroupId)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.STUDY_GROUP_NOT_FOUND.getDescription()));
+
         return StudyGroupDto.fromEntity(studyGroup, studyGroup.getLeader());
     }
 

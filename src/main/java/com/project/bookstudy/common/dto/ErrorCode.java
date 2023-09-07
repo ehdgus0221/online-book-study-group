@@ -17,7 +17,13 @@ public enum ErrorCode {
     LOGIN_REQUIRED("로그인이 필요합니다"),
     LOGIN_FAILED("로그인에 실패하였습니다."),
     SUBJECT_ALREADY_EXISTS("동일한 제목이 이미 존재합니다."),
-    STUDY_GROUP_NOT_FOUND("해당 스터디 그룹이 존재하지 않습니다.");
+    STUDY_GROUP_NOT_FOUND("해당 스터디 그룹이 존재하지 않습니다."),
+    STUDY_GROUP_FULL("스터디 그룹 인원이 다 찼습니다."),
+    STUDY_GROUP_DELETE_FAIL("스터디 그룹 삭제 실패"),
+    NOT_ENOUGH_POINT("포인트가 부족합니다."),
+    ENROLLMENT_NOT_FOUND("해당 신청 정보가 없습니다."),
+    ENROLLMENT_CANCEL_FAIL("해당 스터디가 진행되면 신청 취소가 불가합니다."),
+    REFUND_FAIL("환불 실패");
 
 
     private final String description;
