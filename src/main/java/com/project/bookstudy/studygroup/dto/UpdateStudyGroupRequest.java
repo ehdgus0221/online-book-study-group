@@ -1,6 +1,7 @@
 package com.project.bookstudy.studygroup.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.project.bookstudy.studygroup.domain.UpdateStudyGroupParam;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,21 +10,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-public class CreateStudyGroup {
+@Getter
+public class UpdateStudyGroupRequest {
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
 
-        private Long memberId;
         @NotBlank(message = "validation.subject.required")
         private String subject;
 
         @NotBlank(message = "validation.contents.required")
         private String contents;
-
 
         @Lob
         @NotBlank(message = "validation.contentsDetail.required")
@@ -49,23 +44,33 @@ public class CreateStudyGroup {
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
         private LocalDateTime recruitmentStartDt;
 
-
-    }
-
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
     @Builder
-    public static class Response {
-        private Long id;
-        private String subject;
-
-        public static Response from(StudyGroupDto studyGroupDto) {
-            return Response.builder()
-                    .id(studyGroupDto.getId())
-                    .subject(studyGroupDto.getSubject())
-                    .build();
-        }
+    public UpdateStudyGroupRequest(int maxSize, String contents, String subject, int price, String contentsDetail, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentEndDt, LocalDateTime recruitmentStartDt) {
+        this.maxSize = maxSize;
+        this.contents = contents;
+        this.subject = subject;
+        this.price = price;
+        this.contentsDetail = contentsDetail;
+        this.studyStartDt = studyStartDt;
+        this.studyEndDt = studyEndDt;
+        this.recruitmentEndDt = recruitmentEndDt;
+        this.recruitmentStartDt = recruitmentStartDt;
     }
+
+    public UpdateStudyGroupParam getUpdateStudyGroupParam() {
+        return UpdateStudyGroupParam.builder()
+                .maxSize(maxSize)
+                .contents(contents)
+                .subject(subject)
+                .price(price)
+                .contentsDetail(contentsDetail)
+                .studyStartDt(studyStartDt)
+                .studyEndDt(studyEndDt)
+                .recruitmentStartDt(recruitmentStartDt)
+                .recruitmentEndDt(recruitmentEndDt)
+                .build();
+    }
+
+
+
 }

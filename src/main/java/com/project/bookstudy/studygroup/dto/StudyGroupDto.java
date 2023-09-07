@@ -26,7 +26,8 @@ public class StudyGroupDto {
     private LocalDateTime recruitmentEndDt;
     private MemberDto memberDto;
 
-    public static StudyGroupDto fromEntity(StudyGroup studyGroup, Member member) {
+
+    public static StudyGroupDto fromEntity(StudyGroup studyGroup, Member leader) {
         return StudyGroupDto.builder()
                 .id(studyGroup.getId())
                 .subject(studyGroup.getSubject())
@@ -38,7 +39,7 @@ public class StudyGroupDto {
                 .price(studyGroup.getPrice())
                 .recruitmentStartDt(studyGroup.getRecruitmentStartDt())
                 .recruitmentEndDt(studyGroup.getRecruitmentEndDt())
-                .memberDto(MemberDto.fromEntity(member))
+                .memberDto(MemberDto.fromEntity(leader))
                 .build();
     }
 

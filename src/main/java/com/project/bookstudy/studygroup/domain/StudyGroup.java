@@ -1,10 +1,7 @@
 package com.project.bookstudy.studygroup.domain;
 
 import com.project.bookstudy.member.domain.Member;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -31,12 +28,12 @@ public class StudyGroup {
     private LocalDateTime recruitmentEndDt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private Member leader;
 
 
     @Builder
     public StudyGroup(String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt
-            ,LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Member member) {
+            ,LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Member leader) {
         this.subject = subject;
         this.contents = contents;
         this.contentsDetail = contentsDetail;
@@ -46,7 +43,19 @@ public class StudyGroup {
         this.studyEndDt = studyEndDt;
         this.recruitmentStartDt = recruitmentStartDt;
         this.recruitmentEndDt = recruitmentEndDt;
-        this.member = member;
+        this.leader = leader;
+    }
+
+    public void update(UpdateStudyGroupParam param) {
+        this.subject = param.getSubject();
+        this.contents = param.getContents();
+        this.contentsDetail = param.getContentsDetail();
+        this.maxSize = param.getMaxSize();
+        this.price = param.getPrice();
+        this.studyStartDt = param.getStudyStartDt();
+        this.studyEndDt = param.getStudyEndDt();
+        this.recruitmentStartDt = param.getRecruitmentStartDt();
+        this.recruitmentEndDt = param.getRecruitmentEndDt();
     }
 
 }

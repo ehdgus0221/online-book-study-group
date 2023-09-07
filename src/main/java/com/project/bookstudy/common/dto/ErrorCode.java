@@ -16,7 +16,8 @@ public enum ErrorCode {
     AUTHORIZATION_NOT_FOUND("권한이 존재하지 않습니다."),
     LOGIN_REQUIRED("로그인이 필요합니다"),
     LOGIN_FAILED("로그인에 실패하였습니다."),
-    SUBJECT_ALREADY_EXISTS("동일한 제목이 이미 존재합니다.");
+    SUBJECT_ALREADY_EXISTS("동일한 제목이 이미 존재합니다."),
+    STUDY_GROUP_NOT_FOUND("해당 스터디 그룹이 존재하지 않습니다.");
 
 
     private final String description;
