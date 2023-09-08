@@ -1,5 +1,6 @@
 package com.project.bookstudy.studygroup.domain;
 
+import com.project.bookstudy.common.dto.ErrorCode;
 import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.studygroup.domain.param.CreateStudyGroupParam;
 import com.project.bookstudy.studygroup.domain.param.UpdateStudyGroupParam;
@@ -26,6 +27,7 @@ public class StudyGroup {
     private String contentsDetail;
     private int maxSize;
     private int price;
+    private StudyGroupStatus status;
     private LocalDateTime studyStartDt;
     private LocalDateTime studyEndDt;
     private LocalDateTime recruitmentStartDt;
@@ -54,6 +56,7 @@ public class StudyGroup {
         this.recruitmentStartDt = recruitmentStartDt;
         this.recruitmentEndDt = recruitmentEndDt;
         this.leader = leader;
+        this.status = StudyGroupStatus.RECRUITING;
     }
 
     public static StudyGroup from(Member leader, CreateStudyGroupParam studyGroupParam) {
@@ -91,13 +94,28 @@ public class StudyGroup {
                 .filter((i) -> i.getEnrollmentStatus() == EnrollmentStatus.RESERVED)
                 .count();
 
-        if ( count < maxSize) return true;
+        if ( count < maxSize) {
+            return true;
+        }
         return false;
     }
 
     public boolean isStarted() {
-        if (LocalDateTime.now().isAfter(studyStartDt)) return true;
+        if (LocalDateTime.now().isAfter(studyStartDt)) {
+            return true;
+        }
         return false;
+    }
+
+    public void cancel() {
+
+        if (isStarted()) {
+            throw new IllegalStateException(ErrorCode.STUDY_GROUP_CANCEL_FAIL.getDescription());
+        }
+
+        enrollments.stream()
+                .forEach(e -> e.cancel());
+        status = StudyGroupStatus.CANCEL;
     }
 
 }

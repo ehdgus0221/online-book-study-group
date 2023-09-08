@@ -52,7 +52,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.ENROLLMENT_NOT_FOUND.getDescription()));
 
-        if (!enrollment.getStudyGroup().isStarted()) {
+        if (enrollment.getStudyGroup().isStarted()) {
             throw new IllegalStateException(ErrorCode.ENROLLMENT_CANCEL_FAIL.getDescription());
         }
         enrollment.cancel();
@@ -70,8 +70,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
     @Override
     public Page<EnrollmentDto> getEnrollmentList(Pageable pageable, Long memberId) {
         Page<Enrollment> enrollments = enrollmentRepository.searchEnrollment(pageable, memberId);
-        return enrollments
-                .map(EnrollmentDto::fromEntity);
+        Page<EnrollmentDto> enrollmentDtoList = enrollments
+                .map(content -> EnrollmentDto.fromEntity(content));
+        return enrollmentDtoList;
     }
 
 }

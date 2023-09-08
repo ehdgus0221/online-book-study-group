@@ -55,7 +55,7 @@ public class Member extends BaseTimeEntity{
     }
 
     public void usePoint(int point) {
-        if (this.point < point) throw new IllegalStateException(ErrorCode.NOT_ENOUGH_POINT.getDescription());
+        if (this.point < point) throw new IllegalStateException(ErrorCode.POINT_NOT_ENOUGH.getDescription());
         this.point -= point;
     }
 }

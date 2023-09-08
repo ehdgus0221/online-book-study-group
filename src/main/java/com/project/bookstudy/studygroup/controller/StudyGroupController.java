@@ -22,7 +22,7 @@ public class StudyGroupController {
     @PostMapping("/study-group")
     public CreateStudyGroupResponse createStudyGroup (@RequestBody CreateStudyGroupRequest request) {
         StudyGroupDto studyGroupDto = studyGroupService
-                .createStudyGroup(request.getMemberId(), request.getCreateStudyGroupParam());
+                .createStudyGroup(request.getMemberId(), request.toStudyGroupParam());
 
         return CreateStudyGroupResponse.builder()
                 .studyGroupId(studyGroupDto.getId())
@@ -44,6 +44,11 @@ public class StudyGroupController {
     @PutMapping("/study-group")
     public void updateStudyGroup (@RequestBody UpdateStudyGroupRequest request) {
         studyGroupService.updateStudyGroup(request.getUpdateStudyGroupParam());
+    }
+
+    @PatchMapping("/study-group/{id}")
+    public void cancelStudyGroup(@PathVariable("id") Long studyId) {
+        studyGroupService.cancelStudyGroup(studyId);
     }
 
 

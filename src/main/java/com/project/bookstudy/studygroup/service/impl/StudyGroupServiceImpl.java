@@ -67,5 +67,17 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         return StudyGroupDto.fromEntity(studyGroup, studyGroup.getLeader());
     }
 
+    @Override
+    @Transactional
+    public void cancelStudyGroup(Long id) {
+        StudyGroup studyGroup = studyGroupRepository.findByIdWithEnrollmentWithAll(id)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getDescription()));
+
+        if (studyGroup.isStarted()) {
+            throw new IllegalStateException(ErrorCode.STUDY_GROUP_CANCEL_FAIL.getDescription());
+        }
+
+        studyGroup.cancel();
+    }
 
 }

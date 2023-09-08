@@ -18,18 +18,23 @@ import java.util.Optional;
 import static com.project.bookstudy.member.domain.QMember.member;
 import static com.project.bookstudy.studygroup.domain.QEnrollment.enrollment;
 import static com.project.bookstudy.studygroup.domain.QStudyGroup.studyGroup;
+import static com.project.bookstudy.studygroup.domain.QPayment.payment;
 
 @RequiredArgsConstructor
 public class CustomStudyGroupRepositoryImpl implements CustomStudyGroupRepository {
+
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public Optional<StudyGroup> findByIdWithLeader(Long id) {
-        return Optional.ofNullable(jpaQueryFactory
-                .selectFrom(studyGroup)
-                .where(studyGroup.id.eq(id))
-                .join(studyGroup.leader, member).fetchJoin()
-                .fetchOne());
+
+        StudyGroup studyGroup = jpaQueryFactory
+                .selectFrom(QStudyGroup.studyGroup)
+                .where(QStudyGroup.studyGroup.id.eq(id))
+                .join(QStudyGroup.studyGroup.leader, member).fetchJoin()
+                .fetchOne();
+
+        return Optional.ofNullable(studyGroup);
     }
 
     @Override
@@ -37,8 +42,19 @@ public class CustomStudyGroupRepositoryImpl implements CustomStudyGroupRepositor
 
         StudyGroup studyGroup = jpaQueryFactory
                 .selectFrom(QStudyGroup.studyGroup)
-                .join(QStudyGroup.studyGroup.enrollments, enrollment).fetchJoin()
-                .where(enrollment.enrollmentStatus.eq(EnrollmentStatus.RESERVED))
+                .leftJoin(QStudyGroup.studyGroup.enrollments, enrollment).fetchJoin()
+                .fetchOne();
+
+        return Optional.ofNullable(studyGroup);
+    }
+
+    @Override
+    public Optional<StudyGroup> findByIdWithEnrollmentWithAll(Long id) {
+        StudyGroup studyGroup = jpaQueryFactory
+                .selectFrom(QStudyGroup.studyGroup)
+                .leftJoin(QStudyGroup.studyGroup.enrollments, enrollment).fetchJoin()
+                .join(enrollment.member, member).fetchJoin()
+                .join(enrollment.payment, payment).fetchJoin()
                 .fetchOne();
 
         return Optional.ofNullable(studyGroup);

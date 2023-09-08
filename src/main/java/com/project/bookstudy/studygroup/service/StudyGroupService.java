@@ -30,5 +30,10 @@ public interface StudyGroupService {
      */
     StudyGroupDto getStudyGroup(Long studyGroupId);
 
+    /**
+     * 스터디 그룹 모집 취소
+     */
+    void cancelStudyGroup(Long studyId);
+
 
 }

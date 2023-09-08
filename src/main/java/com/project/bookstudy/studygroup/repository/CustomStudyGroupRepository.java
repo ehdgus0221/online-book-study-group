@@ -12,5 +12,6 @@ public interface CustomStudyGroupRepository {
     Optional<StudyGroup> findByIdWithLeader(Long id);
     Page<StudyGroup> searchStudyGroup(Pageable pageable, StudyGroupSearchCond cond);
     Optional<StudyGroup> findByIdWithEnrollments(Long id);
+    Optional<StudyGroup> findByIdWithEnrollmentWithAll(Long id);
 
 }

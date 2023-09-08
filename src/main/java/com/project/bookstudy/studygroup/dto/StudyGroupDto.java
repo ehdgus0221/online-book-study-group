@@ -2,6 +2,7 @@ package com.project.bookstudy.studygroup.dto;
 
 import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.studygroup.domain.StudyGroup;
+import com.project.bookstudy.studygroup.domain.StudyGroupStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -28,7 +29,7 @@ public class StudyGroupDto {
 
     @Builder
     public StudyGroupDto(Long id, String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt,
-                         LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Long leaderId, String leaderName) {
+                         LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Long leaderId, String leaderName, StudyGroupStatus status) {
 
         this.id = id;
         this.subject = subject;
@@ -59,6 +60,7 @@ public class StudyGroupDto {
                 .price(studyGroup.getPrice())
                 .leaderId(leader.getId())
                 .leaderName(leader.getName())
+                .status(studyGroup.getStatus())
                 .build();
     }
 

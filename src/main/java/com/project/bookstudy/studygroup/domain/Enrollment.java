@@ -59,9 +59,12 @@ public class Enrollment {
     }
 
     public void cancel() {
-        if (enrollmentStatus == EnrollmentStatus.RESERVED) {
-            payment.refund();
+        if (enrollmentStatus == EnrollmentStatus.CANCEL) {
+            return;
         }
+
+        int refundPrice = payment.refund();
+        member.chargePoint(refundPrice);
         enrollmentStatus = EnrollmentStatus.CANCEL;
     }
 

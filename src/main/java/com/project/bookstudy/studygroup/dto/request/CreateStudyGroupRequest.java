@@ -61,7 +61,7 @@ public class CreateStudyGroupRequest {
         this.recruitmentEndDt = recruitmentEndDt;
     }
 
-    public CreateStudyGroupParam getCreateStudyGroupParam() {
+    public CreateStudyGroupParam toStudyGroupParam() {
 
         return CreateStudyGroupParam.builder()
 

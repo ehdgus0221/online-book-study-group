@@ -1,7 +1,6 @@
 package com.project.bookstudy.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.bookstudy.common.dto.ErrorCode;
 import com.project.bookstudy.common.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static com.project.bookstudy.common.dto.ErrorCode.INVALID_TOKEN;
+import static com.project.bookstudy.common.dto.ErrorCode.TOKEN_INVALID;
 
 
 //Filter 에서 올라오는 예외 처리 담당,
@@ -42,7 +41,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(String.valueOf(HttpStatus.UNAUTHORIZED.value()))
-                .message(INVALID_TOKEN.getDescription())
+                .message(TOKEN_INVALID.getDescription())
                 .build();
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
