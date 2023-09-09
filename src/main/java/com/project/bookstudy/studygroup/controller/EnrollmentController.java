@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/enrollment")
 public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
 
-    @PostMapping("/enrollment")
+    @PostMapping
     public CreateEnrollmentResponse createEnrollment(@RequestBody CreateEnrollmentRequest request) {
 
         Long enrollmentId = enrollmentService.enroll(request);
@@ -27,18 +28,18 @@ public class EnrollmentController {
                 .build();
     }
 
-    @DeleteMapping("/enrollment/{id}")
+    @DeleteMapping("/{id}")
     public void cancelEnrollment(@PathVariable("id") Long enrollmentId) {
         enrollmentService.cancel(enrollmentId);
     }
 
-    @GetMapping("/enrollment/{id}")
+    @GetMapping("/{id}")
     public EnrollmentDto getEnrollment(@PathVariable("id") Long enrollmentId) {
         //응답 정보 선별 하고싶으면, Dto에서 정보 선별 및 응답 객체 생성
-        return (EnrollmentDto) enrollmentService.getEnrollment(enrollmentId);
+        return enrollmentService.getEnrollment(enrollmentId);
     }
 
-    @GetMapping("/enrollment")
+    @GetMapping
     public Page<EnrollmentDto> getEnrollmentList(@PageableDefault Pageable pageable,
                                                  @ModelAttribute EnrollmentSearchCond cond) {
         //응답 정보 선별 하고싶으면, Dto에서 정보 선별 및 응답 객체 생성

@@ -27,6 +27,8 @@ public class StudyGroup {
     private String contentsDetail;
     private int maxSize;
     private int price;
+
+    @Enumerated(EnumType.STRING)
     private StudyGroupStatus status;
     private LocalDateTime studyStartDt;
     private LocalDateTime studyEndDt;
