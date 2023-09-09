@@ -7,7 +7,6 @@ import com.project.bookstudy.security.service.JwtTokenProvider;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -21,9 +20,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
-import static com.project.bookstudy.common.dto.ErrorCode.NOT_FOUND_TOKEN;
+import static com.project.bookstudy.common.dto.ErrorCode.TOKEN_NOT_FOUND;
 
 /**
  * [Jwt 인증 필터]
@@ -67,7 +65,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
      */
     public void checkRefreshTokenAndReIssueAccessAndRefreshToken(HttpServletResponse response, String refreshToken) {
             Member member = memberRepository.findByRefreshToken(refreshToken)
-                    .orElseThrow(() -> new JwtException(NOT_FOUND_TOKEN.getDescription()));
+                    .orElseThrow(() -> new JwtException(TOKEN_NOT_FOUND.getDescription()));
 
         String reIssuedRefreshToken = reIssueRefreshToken(member);
         jwtTokenProvider.sendAccessAndRefreshToken(response, jwtTokenProvider.createAccessToken(member.getId()),

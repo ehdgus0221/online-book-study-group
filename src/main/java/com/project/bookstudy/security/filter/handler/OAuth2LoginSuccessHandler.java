@@ -1,7 +1,7 @@
 package com.project.bookstudy.security.filter.handler;
 
 import com.project.bookstudy.member.domain.Member;
-import com.project.bookstudy.member.exception.MemberNotFound;
+import com.project.bookstudy.member.exception.MemberNotFoundException;
 import com.project.bookstudy.member.repository.MemberRepository;
 import com.project.bookstudy.security.service.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User memberInfo = (OAuth2User) authentication.getPrincipal();
         String email = (String) ((Map) memberInfo.getAttribute("kakao_account")).get("email");
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MemberNotFound());
+                .orElseThrow(() -> new MemberNotFoundException());
         String accessToken = jwtTokenProvider.createAccessToken(member.getId());
         String refreshToken = jwtTokenProvider.createRefreshToken();
 
