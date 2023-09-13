@@ -30,7 +30,7 @@ public class EnrollmentDto {
         return EnrollmentDto.builder()
                 .id(enrollment.getId())
                 .status(enrollment.getEnrollmentStatus())
-                .studyGroup(StudyGroupDto.fromEntity(studyGroup, studyGroup.getLeader()))
+                .studyGroup(StudyGroupDto.fromEntity(studyGroup))
                 .payment(PaymentDto.fromEntity(payment))
                 .build();
     }

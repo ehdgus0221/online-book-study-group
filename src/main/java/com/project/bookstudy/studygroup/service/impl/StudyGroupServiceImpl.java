@@ -36,7 +36,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         StudyGroup savedStudyGroup = studyGroupRepository.save(StudyGroup.from(member, studyGroupParam));
 
-        return StudyGroupDto.fromEntity(savedStudyGroup, member);
+        return StudyGroupDto.fromEntity(savedStudyGroup);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
 
         Page<StudyGroup> studyGroups = studyGroupRepository.searchStudyGroup(pageable, cond);
 
-        return studyGroups.map(entity -> StudyGroupDto.fromEntity(entity, entity.getLeader()));
+        return studyGroups.map(entity -> StudyGroupDto.fromEntity(entity));
     }
 
     @Override
@@ -64,7 +64,7 @@ public class StudyGroupServiceImpl implements StudyGroupService {
         StudyGroup studyGroup = studyGroupRepository.findByIdWithLeader(studyGroupId)
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.STUDY_GROUP_NOT_FOUND.getDescription()));
 
-        return StudyGroupDto.fromEntity(studyGroup, studyGroup.getLeader());
+        return StudyGroupDto.fromEntity(studyGroup);
     }
 
     @Override

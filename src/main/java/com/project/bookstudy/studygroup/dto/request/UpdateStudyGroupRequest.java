@@ -60,7 +60,7 @@ public class UpdateStudyGroupRequest {
         this.recruitmentStartDt = recruitmentStartDt;
     }
 
-    public UpdateStudyGroupParam getUpdateStudyGroupParam() {
+    public UpdateStudyGroupParam toUpdateStudyGroupParam() {
         return UpdateStudyGroupParam.builder()
                 .id(id)
                 .maxSize(maxSize)

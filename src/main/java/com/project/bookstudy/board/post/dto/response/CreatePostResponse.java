@@ -1,0 +1,11 @@
+package com.project.bookstudy.board.post.dto.response;
+
+import lombok.Builder;
+import lombok.Getter;
+
+@Getter
+@Builder
+public class CreatePostResponse {
+
+    private Long postId;
+}
