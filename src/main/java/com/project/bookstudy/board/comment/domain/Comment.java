@@ -82,22 +82,6 @@ public class Comment {
     }
 
 
-/*    public Comment(String content) {
-        this.content = content;
-    }
-    public void updateWriter(Member member) {
-        this.writer = member;
-    }
-
-    public void updateBoard(Post post) {
-        this.post = post;
-    }
-
-    public void updateParent(Comment comment) {
-        this.parent = comment;
-    }*/
-
-
     public void delete() {
         isDeleted = true;
     }

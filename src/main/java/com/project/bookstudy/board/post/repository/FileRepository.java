@@ -15,11 +15,8 @@ public interface FileRepository extends JpaRepository<File, Long>, CustomFileRep
     List<File> findAllByPost(Post post);
 
     @Transactional
-    void deleteAllByPostIn(List<Post> posts);
-
-    @Transactional
     @Modifying
-    @Query("delete from File f where f.post.id in :ids")
-    void deleteAllByPostIdIn(@Param("ids") List<Long> ids);
+    @Query("delete from File f where f.post in :post")
+    void deleteAllByPostIn(@Param("post") List<Post> post);
 
 }
