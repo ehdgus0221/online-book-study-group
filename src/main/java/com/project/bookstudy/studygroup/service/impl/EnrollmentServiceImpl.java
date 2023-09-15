@@ -1,5 +1,6 @@
 package com.project.bookstudy.studygroup.service.impl;
 
+import com.project.bookstudy.common.aop.DistributedLock;
 import com.project.bookstudy.common.dto.ErrorCode;
 import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.member.repository.MemberRepository;
@@ -27,6 +28,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Transactional
+    @DistributedLock(key = "ENROLL")
     public Long enroll(CreateEnrollmentRequest request) {
         //Collection Fetch Join → Batch Size 적용 고려
         StudyGroup studyGroup = studyGroupRepository.findByIdWithEnrollments(request.getStudyGroupId())
