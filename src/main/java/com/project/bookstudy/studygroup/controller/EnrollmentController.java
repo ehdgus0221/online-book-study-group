@@ -28,6 +28,7 @@ public class EnrollmentController {
                 .build();
     }
 
+
     @DeleteMapping("/{id}")
     public void cancelEnrollment(@PathVariable("id") Long enrollmentId) {
         enrollmentService.cancel(enrollmentId);

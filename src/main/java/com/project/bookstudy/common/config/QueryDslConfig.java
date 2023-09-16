@@ -1,4 +1,4 @@
-package com.project.bookstudy.common;
+package com.project.bookstudy.common.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.context.annotation.Bean;
