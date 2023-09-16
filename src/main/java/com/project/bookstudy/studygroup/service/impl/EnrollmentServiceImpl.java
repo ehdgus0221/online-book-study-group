@@ -28,7 +28,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     @Transactional
-    @DistributedLock(key = "ENROLL")
+    @DistributedLock(key = "#request.studyGroupId")
     public Long enroll(CreateEnrollmentRequest request) {
         //Collection Fetch Join → Batch Size 적용 고려
         StudyGroup studyGroup = studyGroupRepository.findByIdWithEnrollments(request.getStudyGroupId())
@@ -36,6 +36,7 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getDescription()));
+
 
         if (!studyGroup.isApplicable()) {
             throw new IllegalStateException(ErrorCode.STUDY_GROUP_FULL.getDescription());
@@ -46,6 +47,9 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
         return enrollment.getId();
     }
+
+
+
 
     @Override
     @Transactional
