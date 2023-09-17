@@ -7,6 +7,7 @@ import com.project.bookstudy.studygroup.domain.param.UpdateStudyGroupParam;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class StudyGroup {
         this.recruitmentStartDt = recruitmentStartDt;
         this.recruitmentEndDt = recruitmentEndDt;
         this.leader = leader;
-        this.status = StudyGroupStatus.RECRUITING;
+        this.status = StudyGroupStatus.RECRUIT_WAIT;
     }
 
     public static StudyGroup from(Member leader, CreateStudyGroupParam studyGroupParam) {
@@ -102,6 +103,7 @@ public class StudyGroup {
         return false;
     }
 
+
     public boolean isStarted() {
         if (LocalDateTime.now().isAfter(studyStartDt)) {
             return true;
@@ -117,7 +119,64 @@ public class StudyGroup {
 
         enrollments.stream()
                 .forEach(e -> e.cancel());
-        status = StudyGroupStatus.CANCEL;
+        status = StudyGroupStatus.RECRUIT_CANCEL;
     }
+
+    LocalDate nowDate = LocalDate.now();
+
+    // 스터디 종료
+    public boolean isStudyEnded() {
+        if (getStudyEndDt().toLocalDate().isBefore(nowDate)) {
+            return true;
+        } return false;
+    }
+
+    // 모집 대기
+    public boolean isRecruitmentWaited() {
+        if (getRecruitmentStartDt().toLocalDate().isAfter(nowDate)) {
+            return true;
+        } return false;
+    }
+
+    // 모집 진행
+    public boolean isRecruitmentStarted() {
+        if (getRecruitmentStartDt().toLocalDate().minusDays(1).isBefore(nowDate)
+                && nowDate.isBefore(getRecruitmentEndDt().toLocalDate().plusDays(1))) {
+            return true;
+        } return false;
+    }
+
+    // 모집 마감
+    public boolean isRecruitmentEnded() {
+        if (getRecruitmentEndDt().toLocalDate().isBefore(nowDate)
+                && nowDate.isBefore(getStudyStartDt().toLocalDate())) {
+            return true;
+        } return false;
+    }
+
+    // 스터디 진행
+    public boolean isStudyStarted() {
+        if (getStudyStartDt().toLocalDate().minusDays(1).isBefore(nowDate)
+                && nowDate.isBefore(getStudyEndDt().toLocalDate().plusDays(1))) {
+            return true;
+        } return false;
+    }
+
+    public void recruitWait() {
+        status = StudyGroupStatus.RECRUIT_WAIT;
+    }
+    public void recruitIng() {
+        status = StudyGroupStatus.RECRUIT_ING;
+    }
+    public void recruitmentEnd() {
+        status = StudyGroupStatus.RECRUITMENT_END;
+    }
+    public void studyIng() {
+        status = StudyGroupStatus.STUDY_ING;
+    }
+    public void studyEnd() {
+        status = StudyGroupStatus.STUDY_END;
+    }
+
 
 }

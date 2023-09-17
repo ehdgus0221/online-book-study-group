@@ -37,7 +37,15 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Member member = memberRepository.findById(request.getMemberId())
                 .orElseThrow(() -> new IllegalArgumentException(ErrorCode.USER_NOT_FOUND.getDescription()));
 
+        // 모집 기간 조회
+        if (!studyGroup.isRecruitmentStarted()) {
+            throw new IllegalStateException(ErrorCode.RECRUITMENT_DATE_END.getDescription());
+        }
 
+        // 중복 신청 검사
+        validate(member, studyGroup);
+
+        // 현재 신청 인원 체크
         if (!studyGroup.isApplicable()) {
             throw new IllegalStateException(ErrorCode.STUDY_GROUP_FULL.getDescription());
         }
@@ -48,6 +56,22 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         return enrollment.getId();
     }
 
+    // 중복 검사
+    public void validate(Member member, StudyGroup studyGroup) {
+        if (studyGroup.getLeader().getId() == member.getId()) {
+            throw new IllegalStateException(ErrorCode.LEADER_ENROLLMENT_ERROR.getDescription());
+        }
+
+        validateDuplicateApplication(member, studyGroup);
+    }
+
+    private void validateDuplicateApplication(Member member, StudyGroup studyGroup) {
+        for (Enrollment enrollment : studyGroup.getEnrollments()) {
+            if (enrollment.getMember() == member) {
+                throw new IllegalStateException(ErrorCode.DUPLICATE_ENROLLMENT_ERROR.getDescription());
+            }
+        }
+    }
 
 
 
