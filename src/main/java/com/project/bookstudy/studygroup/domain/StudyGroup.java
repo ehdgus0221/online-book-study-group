@@ -5,6 +5,7 @@ import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.studygroup.domain.param.CreateStudyGroupParam;
 import com.project.bookstudy.studygroup.domain.param.UpdateStudyGroupParam;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = {"enrollments"})
@@ -176,6 +178,28 @@ public class StudyGroup {
     }
     public void studyEnd() {
         status = StudyGroupStatus.STUDY_END;
+    }
+
+
+    public void updateStatus() {
+        if (!status.equals(StudyGroupStatus.STUDY_END)) {
+            if (isStudyEnded()) {
+                studyEnd();
+                log.info(id + " : 스터디 종료");
+            } else if (isRecruitmentWaited()) {
+                recruitWait();
+                log.info(id + " : 모집 대기");
+            } else if (isRecruitmentStarted()) {
+                recruitIng();
+                log.info(id + " : 모집 중");
+            } else if (isRecruitmentEnded()) {
+                recruitmentEnd();
+                log.info(id + " : 모집 마감");
+            } else if (isStudyStarted()) {
+                studyIng();
+                log.info(id + " : 스터디 진행중");
+            }
+        }
     }
 
 

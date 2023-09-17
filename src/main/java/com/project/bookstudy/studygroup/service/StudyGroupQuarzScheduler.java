@@ -30,24 +30,7 @@ public class StudyGroupQuarzScheduler {
         List<StudyGroup> studyGroupList = studyGroupRepository.findAll();
 
         for (StudyGroup studygroup : studyGroupList) {
-            if (!studygroup.getStatus().equals(StudyGroupStatus.STUDY_END)) {
-                if (studygroup.isStudyEnded()) {
-                    studygroup.studyEnd();
-                    log.info(studygroup.getId() + " : 스터디 종료");
-                } else if (studygroup.isRecruitmentWaited()) {
-                    studygroup.recruitWait();
-                    log.info(studygroup.getId() + " : 모집 대기");
-                } else if (studygroup.isRecruitmentStarted()) {
-                    studygroup.recruitIng();
-                    log.info(studygroup.getId() + " : 모집 중");
-                } else if (studygroup.isRecruitmentEnded()) {
-                    studygroup.recruitmentEnd();
-                    log.info(studygroup.getId() + " : 모집 마감");
-                } else if (studygroup.isStudyStarted()) {
-                    studygroup.studyIng();
-                    log.info(studygroup.getId() + " : 스터디 진행중");
-                }
-            }
+            studygroup.updateStatus();
         }
     }
 }
