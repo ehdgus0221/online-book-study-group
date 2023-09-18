@@ -63,7 +63,7 @@ public class Enrollment {
             return;
         }
 
-        int refundPrice = payment.refund();
+        Long refundPrice = payment.refund();
         member.chargePoint(refundPrice);
         enrollmentStatus = EnrollmentStatus.CANCEL;
     }

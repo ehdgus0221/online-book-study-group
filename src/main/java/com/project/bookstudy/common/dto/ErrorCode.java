@@ -26,7 +26,12 @@ public enum ErrorCode {
     STUDY_GROUP_FULL("스터디 그룹 인원이 다 찼습니다."),
     STUDY_GROUP_CANCEL_FAIL("스터디 그룹 삭제 실패"),
     POINT_NOT_ENOUGH("포인트가 부족합니다."),
+    POINT_CHARGE_NOT_FOUND(" 충전 내역 조회 실패"),
+    CHARGE_FAILED("충전 실패"),
+    LEADER_ENROLLMENT_ERROR("스터디그룹 리더는 이미 참여 상태입니다."),
+    DUPLICATE_ENROLLMENT_ERROR("해당 스터디 그룹에 이미 신청한 상태입니다."),
     ENROLLMENT_NOT_FOUND("해당 신청 정보가 없습니다."),
+    RECRUITMENT_DATE_END("모집 기간이 아닙니다."),
     ENROLLMENT_CANCEL_FAIL("해당 스터디가 진행되면 신청 취소가 불가합니다."),
     REFUND_FAIL("환불 실패");
 

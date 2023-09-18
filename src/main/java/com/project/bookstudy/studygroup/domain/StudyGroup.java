@@ -5,13 +5,16 @@ import com.project.bookstudy.member.domain.Member;
 import com.project.bookstudy.studygroup.domain.param.CreateStudyGroupParam;
 import com.project.bookstudy.studygroup.domain.param.UpdateStudyGroupParam;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Slf4j
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(exclude = {"enrollments"})
@@ -26,7 +29,7 @@ public class StudyGroup {
     @Lob
     private String contentsDetail;
     private int maxSize;
-    private int price;
+    private Long price;
 
     @Enumerated(EnumType.STRING)
     private StudyGroupStatus status;
@@ -45,7 +48,7 @@ public class StudyGroup {
 
 
     @Builder
-    public StudyGroup(String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt
+    public StudyGroup(String subject, String contents, String contentsDetail, int maxSize, Long price, LocalDateTime studyStartDt, LocalDateTime studyEndDt
             ,LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Member leader) {
 
         this.subject = subject;
@@ -58,7 +61,7 @@ public class StudyGroup {
         this.recruitmentStartDt = recruitmentStartDt;
         this.recruitmentEndDt = recruitmentEndDt;
         this.leader = leader;
-        this.status = StudyGroupStatus.RECRUITING;
+        this.status = StudyGroupStatus.RECRUIT_WAIT;
     }
 
     public static StudyGroup from(Member leader, CreateStudyGroupParam studyGroupParam) {
@@ -102,6 +105,7 @@ public class StudyGroup {
         return false;
     }
 
+
     public boolean isStarted() {
         if (LocalDateTime.now().isAfter(studyStartDt)) {
             return true;
@@ -117,7 +121,86 @@ public class StudyGroup {
 
         enrollments.stream()
                 .forEach(e -> e.cancel());
-        status = StudyGroupStatus.CANCEL;
+        status = StudyGroupStatus.RECRUIT_CANCEL;
     }
+
+    LocalDate nowDate = LocalDate.now();
+
+    // 스터디 종료
+    public boolean isStudyEnded() {
+        if (getStudyEndDt().toLocalDate().isBefore(nowDate)) {
+            return true;
+        } return false;
+    }
+
+    // 모집 대기
+    public boolean isRecruitmentWaited() {
+        if (getRecruitmentStartDt().toLocalDate().isAfter(nowDate)) {
+            return true;
+        } return false;
+    }
+
+    // 모집 진행
+    public boolean isRecruitmentStarted() {
+        if (getRecruitmentStartDt().toLocalDate().minusDays(1).isBefore(nowDate)
+                && nowDate.isBefore(getRecruitmentEndDt().toLocalDate().plusDays(1))) {
+            return true;
+        } return false;
+    }
+
+    // 모집 마감
+    public boolean isRecruitmentEnded() {
+        if (getRecruitmentEndDt().toLocalDate().isBefore(nowDate)
+                && nowDate.isBefore(getStudyStartDt().toLocalDate())) {
+            return true;
+        } return false;
+    }
+
+    // 스터디 진행
+    public boolean isStudyStarted() {
+        if (getStudyStartDt().toLocalDate().minusDays(1).isBefore(nowDate)
+                && nowDate.isBefore(getStudyEndDt().toLocalDate().plusDays(1))) {
+            return true;
+        } return false;
+    }
+
+    public void recruitWait() {
+        status = StudyGroupStatus.RECRUIT_WAIT;
+    }
+    public void recruitIng() {
+        status = StudyGroupStatus.RECRUIT_ING;
+    }
+    public void recruitmentEnd() {
+        status = StudyGroupStatus.RECRUITMENT_END;
+    }
+    public void studyIng() {
+        status = StudyGroupStatus.STUDY_ING;
+    }
+    public void studyEnd() {
+        status = StudyGroupStatus.STUDY_END;
+    }
+
+
+    public void updateStatus() {
+        if (!status.equals(StudyGroupStatus.STUDY_END)) {
+            if (isStudyEnded()) {
+                studyEnd();
+                log.info(id + " : 스터디 종료");
+            } else if (isRecruitmentWaited()) {
+                recruitWait();
+                log.info(id + " : 모집 대기");
+            } else if (isRecruitmentStarted()) {
+                recruitIng();
+                log.info(id + " : 모집 중");
+            } else if (isRecruitmentEnded()) {
+                recruitmentEnd();
+                log.info(id + " : 모집 마감");
+            } else if (isStudyStarted()) {
+                studyIng();
+                log.info(id + " : 스터디 진행중");
+            }
+        }
+    }
+
 
 }

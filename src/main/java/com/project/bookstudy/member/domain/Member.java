@@ -2,8 +2,10 @@ package com.project.bookstudy.member.domain;
 
 import com.project.bookstudy.common.dto.ErrorCode;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -20,7 +22,7 @@ public class Member extends BaseTimeEntity{
 
     @Lob
     private String career;
-    private Long point = 0L; //나중에 Point class 따로 생성?
+    private Long point = 0L;
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -50,12 +52,33 @@ public class Member extends BaseTimeEntity{
         this.refreshToken = updateRefreshToken;
     }
 
-    public void chargePoint(int point) {
+    public void chargePoint(Long point) {
         this.point += point;
     }
 
-    public void usePoint(int point) {
+    public void usePoint(Long point) {
         if (this.point < point) throw new IllegalStateException(ErrorCode.POINT_NOT_ENOUGH.getDescription());
         this.point -= point;
+    }
+
+    /**
+     * EnrollmentServiceImpl
+     * enrollment.getMember() == member 부분을 정확하게 계산하기 위해 작성
+     * 두 객체의 주소가 아닌 내용을 비교
+     */
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Member member = (Member) o;
+        return getId() != null && Objects.equals(getId(), member.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

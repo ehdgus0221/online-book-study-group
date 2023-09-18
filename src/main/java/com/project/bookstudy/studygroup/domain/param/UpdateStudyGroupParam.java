@@ -10,7 +10,7 @@ public class UpdateStudyGroupParam {
 
     private Long id;
     private String subject;
-    private int price;
+    private Long price;
     private String contents;
     private String contentsDetail;
     private int maxSize;
@@ -20,7 +20,7 @@ public class UpdateStudyGroupParam {
     private LocalDateTime recruitmentEndDt;
 
     @Builder
-    private UpdateStudyGroupParam(Long id, String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt) {
+    private UpdateStudyGroupParam(Long id, String subject, String contents, String contentsDetail, int maxSize, Long price, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt) {
 
         this.id = id;
         this.subject = subject;

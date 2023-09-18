@@ -15,12 +15,12 @@ public class PaymentDto {
     private LocalDateTime paymentDate;
     private PaymentStatus status;
 
-    private int price;
-    private int discountPrice;
-    private int paymentPrice;
+    private Long price;
+    private Long discountPrice;
+    private Long paymentPrice;
 
     @Builder
-    private PaymentDto(Long id, LocalDateTime paymentDate, PaymentStatus status, int price, int discountPrice, int paymentPrice) {
+    private PaymentDto(Long id, LocalDateTime paymentDate, PaymentStatus status, Long price, Long discountPrice, Long paymentPrice) {
 
         this.id = id;
         this.paymentDate = paymentDate;

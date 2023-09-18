@@ -29,7 +29,7 @@ public class UpdateStudyGroupRequest {
         private int maxSize;
 
         @NotNull(message = "validation.price.required")
-        private int price;
+        private Long price;
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss", timezone = "Asia/Seoul")
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -46,7 +46,7 @@ public class UpdateStudyGroupRequest {
         private LocalDateTime recruitmentStartDt;
 
     @Builder
-    public UpdateStudyGroupRequest(Long id, int maxSize, String contents, String subject, int price, String contentsDetail, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentEndDt, LocalDateTime recruitmentStartDt) {
+    public UpdateStudyGroupRequest(Long id, int maxSize, String contents, String subject, Long price, String contentsDetail, LocalDateTime studyStartDt, LocalDateTime studyEndDt, LocalDateTime recruitmentEndDt, LocalDateTime recruitmentStartDt) {
 
         this.id = id;
         this.maxSize = maxSize;
