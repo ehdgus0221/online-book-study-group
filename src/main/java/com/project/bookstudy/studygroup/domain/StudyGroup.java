@@ -29,7 +29,7 @@ public class StudyGroup {
     @Lob
     private String contentsDetail;
     private int maxSize;
-    private int price;
+    private Long price;
 
     @Enumerated(EnumType.STRING)
     private StudyGroupStatus status;
@@ -48,7 +48,7 @@ public class StudyGroup {
 
 
     @Builder
-    public StudyGroup(String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt
+    public StudyGroup(String subject, String contents, String contentsDetail, int maxSize, Long price, LocalDateTime studyStartDt, LocalDateTime studyEndDt
             ,LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Member leader) {
 
         this.subject = subject;

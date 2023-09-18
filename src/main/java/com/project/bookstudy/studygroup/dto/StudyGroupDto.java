@@ -18,7 +18,7 @@ public class StudyGroupDto {
     private String contents;
     private String contentsDetail;
     private int maxSize;
-    private int price;
+    private Long price;
     private LocalDateTime studyStartDt;
     private LocalDateTime studyEndDt;
     private LocalDateTime recruitmentStartDt;
@@ -28,7 +28,7 @@ public class StudyGroupDto {
 
 
     @Builder
-    public StudyGroupDto(Long id, String subject, String contents, String contentsDetail, int maxSize, int price, LocalDateTime studyStartDt, LocalDateTime studyEndDt,
+    public StudyGroupDto(Long id, String subject, String contents, String contentsDetail, int maxSize, Long price, LocalDateTime studyStartDt, LocalDateTime studyEndDt,
                          LocalDateTime recruitmentStartDt, LocalDateTime recruitmentEndDt, Long leaderId, String leaderName, StudyGroupStatus status) {
 
         this.id = id;
